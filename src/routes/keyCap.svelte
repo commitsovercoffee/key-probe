@@ -1,6 +1,6 @@
 <script>
 	let KeyCapStyle =
-		'p-2 border-2 decoration-zinc-500 decoration-2 rounded-xl transition duration-100 ';
+		'p-2 m-1 border-2 decoration-zinc-500 decoration-2 rounded-xl transition duration-300 delay-50 ';
 
 	export let keys;
 	export let activeKey = '';
@@ -13,9 +13,9 @@
 			{#each row as k}
 				<kbd
 					class={activeKey === k
-						? KeyCapStyle + 'bg-zinc-600 -translate-y-2'
+						? KeyCapStyle + 'bg-zinc-600 -translate-y-4 text-zinc-100'
 						: prevPressed.includes(k)
-						? KeyCapStyle + 'bg-teal-300'
+						? KeyCapStyle + 'bg-sky-500'
 						: KeyCapStyle + 'bg-zinc-300'}>{k}</kbd
 				>
 			{/each}

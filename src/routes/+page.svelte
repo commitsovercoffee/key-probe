@@ -88,12 +88,23 @@
 />
 
 <div class="mx-auto w-fit">
-	<p class="text-xl p-2 m-2">
-		Last Pressed Key : <kbd>{lastKey}</kbd>
-	</p>
-	<div class="flex p-2 m-2 border-2 decoration-red-500 rounded-xl">
+	<div class="bg-[#232323] flex p-2 m-4 mt-16 border-2 decoration-red-500 rounded-xl">
 		<KeyCap keys={main} {activeKey} {prevPressed} />
 		<KeyCap keys={navPad} {activeKey} {prevPressed} />
 		<KeyCap keys={numPad} {activeKey} {prevPressed} />
+	</div>
+
+	<div class="p-2 m-4 flex justify-between">
+		<p class="text-zinc-800 dark:text-zinc-500 text-xl p-2 m-2">
+			Last Pressed Key : <kbd>{lastKey}</kbd>
+		</p>
+
+		<button
+			on:click={function () {
+				prevPressed = [];
+			}}
+			class="px-2 py-1 m-1 bg-[#232323] dark:bg-zinc-300 rounded-xl text-zinc-100 hover:-translate-y-1 active:translate-y-1 transition duration-50 ease-in shadow-2xl shadow-zinc-800 dark:shadow-zinc-500"
+			>Reset</button
+		>
 	</div>
 </div>
