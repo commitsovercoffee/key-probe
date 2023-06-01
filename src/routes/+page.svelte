@@ -1,143 +1,150 @@
 <script>
-	let oneU = 'px-4 py-2 m-1';
-	let twoU = 'px-8 py-2 m-1';
-	let threeU = 'px-16 py-2 m-1';
-	let growU = 'px-2 py-2 m-1 grow';
-
-	let letter = 'px-6 py-2 m-1';
-	let fill = 'grow';
-
-	let keyCap = 'rounded-xl border-2 border-zinc-500 duration-300 ease-in-out ';
-	let unpressed = ' bg-zinc-500';
-	let pressed = ' bg-red-500';
-	let prevpressed = ' bg-teal-500';
-
-	let fnRow = [
-		{ legend: 'Esc', key: 'Escape', size: oneU, filler: null },
-		{ legend: '', key: '', size: oneU, filler: fill },
-		{ legend: 'F1', key: 'F1', size: oneU, filler: null },
-		{ legend: 'F2', key: 'F2', size: oneU, filler: null },
-		{ legend: 'F3', key: 'F3', size: oneU, filler: null },
-		{ legend: 'F4', key: 'F4', size: oneU, filler: null },
-		{ legend: '', key: '', size: oneU, filler: fill },
-		{ legend: 'F5', key: 'F5', size: oneU, filler: null },
-		{ legend: 'F6', key: 'F6', size: oneU, filler: null },
-		{ legend: 'F7', key: 'F7', size: oneU, filler: null },
-		{ legend: 'F8', key: 'F8', size: oneU, filler: null },
-		{ legend: '', key: '', size: oneU, filler: fill },
-		{ legend: 'F9', key: 'F9', size: oneU, filler: null },
-		{ legend: 'F10', key: 'F10', size: oneU, filler: null },
-		{ legend: 'F11', key: 'F11', size: oneU, filler: null },
-		{ legend: 'F12', key: 'F12', size: oneU, filler: null }
+	let keyboard = [
+		['Esc', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12'],
+		['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace'],
+		['Tab', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '[', ']', '\\'],
+		['Caps', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';', "'", 'Enter'],
+		[' Shift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', 'Shift '],
+		[' Ctrl', ' OS', ' Alt', 'Space', 'Alt ', 'OS ', 'Ctrl ', 'Menu']
 	];
 
-	let mainBlock = [
-		[
-			{ legend: 'tab', key: 'Tab', size: twoU, filler: null },
-			{ legend: 'q', key: 'q', size: letter, filler: null },
-			{ legend: 'w', key: 'w', size: letter, filler: null },
-			{ legend: 'e', key: 'e', size: letter, filler: null },
-			{ legend: 'r', key: 'r', size: letter, filler: null },
-			{ legend: 't', key: 't', size: letter, filler: null },
-			{ legend: 'y', key: 'y', size: letter, filler: null },
-			{ legend: 'u', key: 'u', size: letter, filler: null },
-			{ legend: 'i', key: 'i', size: letter, filler: null },
-			{ legend: 'o', key: 'o', size: letter, filler: null },
-			{ legend: 'p', key: 'p', size: letter, filler: null },
-			{ legend: '[', key: '[', size: letter, filler: null },
-			{ legend: ']', key: ']', size: letter, filler: null },
-			{ legend: '\\', key: '\\', size: twoU, filler: null }
-		],
-		[
-			{ legend: 'caps', key: 'Caplock', size: twoU, filler: null },
-			{ legend: 'a', key: 'a', size: letter, filler: null },
-			{ legend: 's', key: 's', size: letter, filler: null },
-			{ legend: 'd', key: 'd', size: letter, filler: null },
-			{ legend: 'f', key: 'f', size: letter, filler: null },
-			{ legend: 'g', key: 'g', size: letter, filler: null },
-			{ legend: 'h', key: 'h', size: letter, filler: null },
-			{ legend: 'j', key: 'j', size: letter, filler: null },
-			{ legend: 'k', key: 'k', size: letter, filler: null },
-			{ legend: 'l', key: 'l', size: letter, filler: null },
-			{ legend: ';', key: ';', size: letter, filler: null },
-			{ legend: "'", key: "'", size: letter, filler: null },
-			{ legend: 'enter', key: 'enter', size: twoU, filler: null }
-		],
-		[
-			{ legend: 'shift', key: 'Shift', size: growU, filler: null },
-			{ legend: 'z', key: 'z', size: letter, filler: null },
-			{ legend: 'x', key: 'x', size: letter, filler: null },
-			{ legend: 'c', key: 'c', size: letter, filler: null },
-			{ legend: 'v', key: 'v', size: letter, filler: null },
-			{ legend: 'b', key: 'b', size: letter, filler: null },
-			{ legend: 'n', key: 'n', size: letter, filler: null },
-			{ legend: 'm', key: 'm', size: letter, filler: null },
-			{ legend: ',', key: ',', size: letter, filler: null },
-			{ legend: '.', key: '.', size: letter, filler: null },
-			{ legend: '/', key: '/', size: letter, filler: null },
-			{ legend: 'shift', key: 'Shift', size: growU, filler: null }
-		],
-		[
-			{ legend: 'ctrl', key: 'Control', size: oneU, filler: null },
-			{ legend: 'os', key: 'OS', size: oneU, filler: null },
-			{ legend: 'alt', key: 'Alt', size: oneU, filler: null },
-			{ legend: '', key: ' ', size: growU, filler: null },
-			{ legend: 'alt', key: 'Alt', size: oneU, filler: null },
-			{ legend: 'os', key: 'OS', size: oneU, filler: null },
-			{ legend: 'menu', key: 'ContextMenu', size: oneU, filler: null },
-			{ legend: 'ctrl', key: 'Control', size: oneU, filler: null }
-		]
+	let homeBlock = [
+		['PrintSc', 'ScrollLock', 'Pause'],
+		['Insert', 'Home', 'PageUp'],
+		['Delete', 'End', 'PageDown'],
+		['Left', 'Up', 'Right', 'Down']
 	];
-	let log = '';
-	let key;
+
+	let numBlock = [
+		['Num', ' /', ' *', ' -'],
+		[' 7', ' 8', ' 9', ' +'],
+		[' 4', ' 5', ' 6'],
+		[' 1', ' 2', ' 3'],
+		[' 0', ' .', ' Enter']
+	];
+
+	let base = 'p-2 border-2 decoration-zinc-500 decoration-2 rounded-xl ';
+	let prevPressed = [];
+	let currentlyPressed = '';
+	let currentlyPressedKey = '';
+	let currentlyPressedStyle = 'bg-zinc-600 ';
+	let lastPressed = '';
+
+	function replace(x, y) {
+		if (currentlyPressed.includes(x)) currentlyPressed = currentlyPressed.replace(x, y);
+	}
 </script>
 
 <svelte:body
 	on:keydown={function (event) {
 		event.preventDefault();
-		key = event.key;
-		log += key;
+		console.log(event.code);
+		console.log(event.key);
+
+		currentlyPressed = event.code;
+		currentlyPressedKey = event.key;
+		console.log(currentlyPressedKey);
+
+		console.log(currentlyPressed);
+		replace('Key', '');
+		replace('Minus', '-');
+		replace('Equal', '=');
+		replace('BracketLeft', '[');
+		replace('BracketRight', ']');
+		replace('Backslash', '\\');
+		replace('CapsLock', 'Caps');
+		replace('Semicolon', ';');
+		replace('Quote', "'");
+		replace('ShiftLeft', ' Shift');
+		replace('ShiftRight', 'Shift ');
+		replace('Comma', ',');
+		replace('Period', '.');
+		replace('ControlLeft', ' Ctrl');
+		replace('OSLeft', ' OS');
+		replace('AltLeft', ' Alt');
+		replace('AltRight', 'Alt ');
+		replace('OSRight', 'OS ');
+		replace('ControlRight', 'Ctrl ');
+		replace('ContextMenu', 'Menu');
+		replace('Escape', 'Esc');
+		replace('ArrowLeft', 'Left');
+		replace('ArrowUp', 'Up');
+		replace('ArrowRight', 'Right');
+		replace('ArrowDown', 'Down');
+		replace('Backquote', '`');
+		replace('NumLock', 'Num');
+		replace('PrintScreen', 'PrintSc');
+		replace('Digit', '');
+
+		replace('NumpadDivide', ' /');
+		replace('NumpadMultiply', ' *');
+		replace('NumpadSubtract', ' -');
+		replace('NumpadAdd', ' +');
+		replace('NumpadDecimal', ' .');
+		replace('Numpad', ' ');
+
+		console.log(currentlyPressed);
+
+		lastPressed = currentlyPressed;
+		prevPressed.includes(currentlyPressed)
+			? (currentlyPressedStyle = ' bg-zinc-300')
+			: (currentlyPressedStyle = ' bg-teal-300');
+		prevPressed.push(currentlyPressed);
 	}}
 	on:keyup={function () {
 		setTimeout(function () {
-			key = null;
+			currentlyPressed = null;
 		}, 100);
 	}}
 />
 
-<p class="bg-gray-600 p-4 m-4 text-zinc-50 mx-auto rounded-xl">{log}</p>
-<div class="p-2 m-4 w-fit mx-auto border-zinc-500 border-2 rounded-xl">
-	<section class="flex flex-nowrap">
-		{#each fnRow as k}
-			{#if k.filler != null}
-				<div class={k.filler} />
-			{:else}
-				<button
-					class={key === k.key
-						? keyCap + k.size + pressed
-						: log.includes(k.key)
-						? keyCap + k.size + prevpressed
-						: keyCap + k.size + unpressed}>{k.legend}</button
-				>
-			{/if}
+<p>The key that you pressed was : {lastPressed}</p>
+<div class="flex p-4 m-4 border-2 decoration-zinc-500 rounded-xl">
+	<section class="p-2 m-2">
+		{#each keyboard as row}
+			<section class="my-1 flex">
+				{#each row as k}
+					<kbd
+						class={currentlyPressed === k
+							? base + 'bg-zinc-600'
+							: prevPressed.includes(k)
+							? base + 'bg-teal-300'
+							: base + 'bg-zinc-300'}>{k}</kbd
+					>
+				{/each}
+			</section>
 		{/each}
 	</section>
 
-	{#each mainBlock as block}
-		<section class="flex flex-nowrap">
-			{#each block as k}
-				{#if k.filler != null}
-					<div class={k.filler} />
-				{:else}
-					<button
-						class={key === k.key
-							? keyCap + k.size + pressed
-							: log.includes(k.key)
-							? keyCap + k.size + prevpressed
-							: keyCap + k.size + unpressed}>{k.legend}</button
+	<section class="p-2 m-2">
+		{#each homeBlock as row}
+			<section class="my-1 flex">
+				{#each row as k}
+					<kbd
+						class={currentlyPressed === k
+							? base + 'bg-zinc-600'
+							: prevPressed.includes(k)
+							? base + 'bg-teal-300'
+							: base + 'bg-zinc-300'}>{k}</kbd
 					>
-				{/if}
-			{/each}
-		</section>
-	{/each}
+				{/each}
+			</section>
+		{/each}
+	</section>
+
+	<section class="p-2 m-2">
+		{#each numBlock as row}
+			<section class="my-1 flex">
+				{#each row as k}
+					<kbd
+						class={currentlyPressed === k
+							? base + 'bg-zinc-600'
+							: prevPressed.includes(k)
+							? base + 'bg-teal-300'
+							: base + 'bg-zinc-300'}>{k}</kbd
+					>
+				{/each}
+			</section>
+		{/each}
+	</section>
 </div>
