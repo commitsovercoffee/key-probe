@@ -1,7 +1,4 @@
 <script>
-	let KeyCapStyle =
-		'p-2 m-1 border-2 decoration-zinc-500 decoration-2 rounded-xl transition duration-300 delay-50 ';
-
 	export let keys;
 	export let activeKey = '';
 	export let prevPressed = [];
