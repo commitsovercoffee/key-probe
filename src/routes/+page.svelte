@@ -1,24 +1,26 @@
 <script>
-	let fnRow = [
-		'Esc',
-		null,
-		'F1',
-		'F2',
-		'F3',
-		'F4',
-		null,
-		'F5',
-		'F6',
-		'F7',
-		'F8',
-		null,
-		'F9',
-		'F10',
-		'F11',
-		'F12'
-	];
+	import { element } from 'svelte/internal';
 
 	let main = [
+		[
+			'Esc',
+			'keyFill',
+			'F1',
+			'F2',
+			'F3',
+			'F4',
+			'keyFill',
+			'F5',
+			'F6',
+			'F7',
+			'F8',
+			'keyFill',
+			'F9',
+			'F10',
+			'F11',
+			'F12'
+		],
+		['rowFill'],
 		['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace'],
 		['Tab', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '[', ']', '\\'],
 		['Caps', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';', "'", 'Enter'],
@@ -26,14 +28,14 @@
 		[' Ctrl', ' OS', ' Alt', 'Space', 'Alt ', 'OS ', 'Ctrl ', 'Menu']
 	];
 
-	let opts = ['Print Scrn', 'Scroll Lock', 'Pause'];
 	let navPad = [
+		['Print Scrn', 'Scroll Lock', 'Pause'],
+		['rowFill'],
 		['Ins', 'Home', 'Page Up'],
-		['Del', 'End', 'Page Down']
-	];
-
-	let arrows = [
-		[null, 'Up', null],
+		['Del', 'End', 'Page Down'],
+		['keyFill'],
+		['keyFill'],
+		['keyFill', 'Up', 'keyFill'],
 		['Left', 'Down', 'Right']
 	];
 
@@ -51,12 +53,18 @@
 	let activeCode = '';
 	let lastKey = '';
 
+	let map = {};
+	console.log(map);
+
 	let keyCapStyle =
-		'p-0.5 m-1 border-2 border-zinc-200 dark:border-zinc-800 hover:border-zinc-900 hover:dark:border-zinc-100 rounded-lg transition duration-300 delay-50 h-10 ';
+		'p-1 m-1 border-2 border-zinc-200 dark:border-zinc-800 rounded-xl transition duration-300 delay-50 h-12 ';
 </script>
 
 <svelte:body
 	on:keydown={function (event) {
+		map[event.code] = element.type == this['on:keydown'];
+		console.log(map);
+
 		event.preventDefault();
 		activeKey = event.code;
 		activeCode = event.key;
@@ -107,39 +115,26 @@
 	}}
 	on:keyup={function () {
 		setTimeout(function () {
-			activeKey = null;
+			activeKey = 'keyFill';
 		}, 100);
 	}}
 />
 
 <div class="mx-auto w-fit prose prose-zinc dark:prose-invert max-w-none">
 	<div
-		class="m-2 mt-16 p-4 flex border border-zinc-200 dark:border-zinc-800 rounded-xl flex-grow bg-zinc-50 dark:bg-zinc-800 overflow-hidden"
+		class="mt-16 p-4 flex border border-zinc-200 dark:border-zinc-800 rounded-xl flex-grow bg-zinc-50 dark:bg-zinc-800 overflow-hidden"
 	>
-		<section class="p-2 m-2">
-			<!-- fnRow -->
-			<section class="flex mb-8">
-				{#each fnRow as k}
-					{#if k === null}
-						<kbd class={'opacity-0 w-2/12 no-pointer'}>{k}</kbd>
-					{:else}
-						<kbd
-							class={activeKey === k
-								? keyCapStyle + 'w-2/12  ' + 'bg-zinc-600 -translate-y-4 '
-								: prevPressed.includes(k)
-								? keyCapStyle + 'w-2/12  ' + 'bg-sky-500'
-								: keyCapStyle + 'w-2/12  ' + 'bg-zinc-100 dark:bg-zinc-900 '}>{k}</kbd
-						>
-					{/if}
-				{/each}
-			</section>
-
+		<section class="">
 			<!-- main block -->
 			<div>
 				{#each main as row}
-					<section class="my-1 flex">
+					<section class="flex">
 						{#each row as k}
-							{#if k === 'Tab' || k === 'Caps' || k === '\\' || k === 'Enter'}
+							{#if k === 'rowFill'}
+								<kbd class={'h-10 w-full no-pointer'} />
+							{:else if k === 'keyFill'}
+								<kbd class={'opacity-0 w-12 no-pointer'}>{k}</kbd>
+							{:else if k === 'Tab' || k === 'Caps' || k === '\\' || k === 'Enter'}
 								<kbd
 									class={activeKey === k
 										? keyCapStyle + 'w-4/12 ' + 'bg-zinc-600 -translate-y-4 '
@@ -166,9 +161,9 @@
 							{:else}
 								<kbd
 									class={activeKey === k
-										? keyCapStyle + 'w-3/12 ' + 'bg-zinc-600 -translate-y-4 '
+										? keyCapStyle + 'w-3/12 ' + 'bg-red-300 dark:bg-red-500 -translate-y-4 '
 										: prevPressed.includes(k)
-										? keyCapStyle + 'w-3/12 ' + 'bg-sky-500'
+										? keyCapStyle + 'w-3/12 ' + 'bg-teal-300 dark:bg-teal-800 prose-invert'
 										: keyCapStyle + 'w-3/12 ' + 'bg-zinc-100 dark:bg-zinc-900 '}>{k}</kbd
 								>
 							{/if}
@@ -178,53 +173,20 @@
 			</div>
 		</section>
 
-		<section class="p-2 ml-8 mr-8 m-2">
+		<section class="ml-8 mr-8">
 			<!-- System Control -->
-
-			<section class="flex mb-8">
-				{#each opts as k}
-					<kbd
-						class={activeKey === k
-							? keyCapStyle + 'w-12 text-xs  ' + 'bg-zinc-600 -translate-y-4 '
-							: prevPressed.includes(k)
-							? keyCapStyle + 'w-12 text-xs  ' + 'bg-sky-500'
-							: keyCapStyle + 'w-12 text-xs  ' + 'bg-zinc-100 dark:bg-zinc-900 '}
-					>
-						<p>
-							{k}
-						</p>
-					</kbd>
-				{/each}
-			</section>
-
 			<div>
 				{#each navPad as row}
-					<section class="my-1 flex">
+					<section class="flex">
 						{#each row as k}
-							<kbd
-								class={activeKey === k
-									? keyCapStyle + 'w-12 text-xs  ' + 'bg-zinc-600 -translate-y-4 '
-									: prevPressed.includes(k)
-									? keyCapStyle + 'w-12 text-xs  ' + 'bg-sky-500'
-									: keyCapStyle + 'w-12 text-xs  ' + 'bg-zinc-100 dark:bg-zinc-900 '}
-							>
-								{k}
-							</kbd>
-						{/each}
-					</section>
-				{/each}
-			</div>
-
-			<div>
-				{#each arrows as row}
-					<section class="my-1 flex">
-						{#each row as k}
-							{#if k === null}
+							{#if k === 'rowFill'}
+								<kbd class={'h-10 w-full no-pointer'} />
+							{:else if k === 'keyFill'}
 								<kbd class={'opacity-0 w-14 no-pointer'}>{k}</kbd>
 							{:else}
 								<kbd
 									class={activeKey === k
-										? keyCapStyle + 'w-12 h-10 text-xs  ' + 'bg-zinc-600 -translate-y-4 '
+										? keyCapStyle + 'w-12 text-xs  ' + 'bg-zinc-600 -translate-y-4 '
 										: prevPressed.includes(k)
 										? keyCapStyle + 'w-12 text-xs  ' + 'bg-sky-500'
 										: keyCapStyle + 'w-12 text-xs  ' + 'bg-zinc-100 dark:bg-zinc-900 '}
@@ -238,12 +200,12 @@
 			</div>
 		</section>
 
-		<div class="p-2 m-2">
-			<p class="p-2 mb-8 italic">Commits over coffee.</p>
-			<section class="p-2 flex justify-between">
-				<div>
+		<div>
+			<p class="m-8 text-xs italic">Designed & developed by<br />Commits over coffee.</p>
+			<section class="flex justify-center">
+				<div class="p-0 m-0">
 					{#each numPad as row}
-						<section class="my-1 flex">
+						<section class="flex">
 							{#each row as k}
 								{#if k === ' 0'}
 									<kbd
@@ -258,7 +220,7 @@
 								{:else}
 									<kbd
 										class={activeKey === k
-											? keyCapStyle + 'w-12 h-10 text-xs  ' + 'bg-zinc-600 -translate-y-4 '
+											? keyCapStyle + 'w-12 text-xs  ' + 'bg-zinc-600 -translate-y-4 '
 											: prevPressed.includes(k)
 											? keyCapStyle + 'w-12 text-xs  ' + 'bg-sky-500'
 											: keyCapStyle + 'w-12 text-xs  ' + 'bg-zinc-100 dark:bg-zinc-900 '}
@@ -271,12 +233,12 @@
 					{/each}
 				</div>
 				<div>
-					<section class="my-1 flex flex-col">
+					<section class="flex flex-col p-0 m-0 h-full">
 						{#each numExtra as k}
 							{#if k === ' -'}
 								<kbd
 									class={activeKey === k
-										? keyCapStyle + 'w-16 text-xs  ' + 'bg-zinc-600 -translate-y-4 '
+										? keyCapStyle + 'w-12 text-xs  ' + 'bg-zinc-600 -translate-y-4 '
 										: prevPressed.includes(k)
 										? keyCapStyle + 'w-12 text-xs  ' + 'bg-sky-500'
 										: keyCapStyle + 'w-12 text-xs  ' + 'bg-zinc-100 dark:bg-zinc-900 '}
@@ -286,10 +248,10 @@
 							{:else}
 								<kbd
 									class={activeKey === k
-										? keyCapStyle + 'w-12 h-10 text-xs  ' + 'bg-zinc-600 -translate-y-4 '
+										? keyCapStyle + 'w-12 text-xs  ' + 'bg-zinc-600 -translate-y-4 '
 										: prevPressed.includes(k)
 										? keyCapStyle + 'w-12 text-xs  ' + 'bg-sky-500'
-										: keyCapStyle + 'w-12 h-24 text-xs  ' + 'bg-zinc-100 dark:bg-zinc-900 '}
+										: keyCapStyle + 'w-12 grow text-xs  ' + 'bg-zinc-100 dark:bg-zinc-900 '}
 								>
 									{k}
 								</kbd>
@@ -301,7 +263,7 @@
 		</div>
 	</div>
 
-	<div class="p-2 m-4 flex justify-between">
+	<div class="m-4 flex justify-between">
 		<p class=" text-xl p-2 m-2">
 			Last Pressed Key : <kbd>{lastKey}</kbd>
 		</p>
@@ -310,7 +272,7 @@
 			on:click={function () {
 				prevPressed = [];
 			}}
-			class="px-2 py-1 m-1 bg-[#232323] dark:bg-zinc-900 rounded-xl hover:-translate-y-1 active:translate-y-1 transition duration-50 ease-in shadow-2xl shadow-zinc-800 dark:shadow-zinc-500"
+			class="px-4 m-1 rounded-xl transition duration-300 delay-50 h-12 bg-zinc-200 dark:bg-zinc-800 hover:-translate-y-1 active:translate-y-1 active:bg-sky-500"
 			>Reset</button
 		>
 	</div>
