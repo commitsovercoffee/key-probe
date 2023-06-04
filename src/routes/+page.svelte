@@ -1,7 +1,12 @@
 <script>
-	let defaultStyle = 'p-2 m-2 bg-zinc-200';
-	let pressedStyle = 'p-2 m-2 bg-red-500';
-	let unpressedStyle = 'p-2 m-2 bg-sky-500';
+	let baseStyle = 'p-2 m-1 border-2 rounded-xl transition duration-300 border-zinc-200 ';
+	let defaultStyle = baseStyle + 'bg-zinc-100 dark:bg-zinc-800 ';
+	let keyDownStyle = baseStyle + 'bg-red-300 dark:bg-red-600 -translate-y-4 ';
+	let keyUpStyle = baseStyle + 'bg-teal-300 dark:bg-teal-600 ';
+
+	let pressedKeys = new Array();
+	let unpressedKeys = new Array();
+	let lastKey = [];
 
 	function onKeyDown(e) {
 		if (!pressedKeys.includes(e.code)) pressedKeys = [...pressedKeys, e.code];
@@ -16,9 +21,14 @@
 		}, 50);
 	}
 
-	let pressedKeys = new Array();
-	let unpressedKeys = new Array();
-	let lastKey = [];
+	function getWidth(key) {
+		switch (key) {
+			case 'Space':
+				return 'basis-1/2';
+			default:
+				return 'basis-1/12';
+		}
+	}
 
 	const keyMap = [
 		{
@@ -175,8 +185,6 @@
 			NumpadEnter: 'Enter'
 		}
 	];
-
-	let keyCapStyle = 'p-2 m-1 border-2 border-zinc-200  rounded-xl transition duration-300 ';
 </script>
 
 <svelte:window on:keydown|preventDefault={onKeyDown} on:keyup={onKeyUp} />
@@ -185,101 +193,90 @@
 	<div
 		class="mt-16 p-4 flex border border-zinc-200 dark:border-zinc-800 rounded-xl bg-zinc-50 dark:bg-zinc-800"
 	>
-		<section class="ml-8 mr-8">
-			{#each navMap as row}
-				<section class="flex justify-stretch">
+		<!-- fnRow + 60% -->
+		<section>
+			{#each keyMap as row}
+				<section class="flex">
 					{#each Object.entries(row) as [key, value]}
-						{#if value === 'Space'}
-							<kbd class={keyCapStyle + 'basis-5/6'} id={key}>{value}</kbd>
-						{:else if value === 'Tab' || value === 'Caps' || value === 'Enter'}
-							<kbd class={keyCapStyle + 'basis-3/6'} id={key}>{value}</kbd>
-						{:else}
+						<kbd
+							class={pressedKeys.includes(key)
+								? keyDownStyle + getWidth(key)
+								: unpressedKeys.includes(key)
+								? keyUpStyle + getWidth(key)
+								: defaultStyle + getWidth(key)}>{value}</kbd
+						>
+					{/each}
+				</section>
+			{/each}
+		</section>
+
+		<div>
+			<!-- system, nav and arrow keys -->
+			<section class="px-8">
+				{#each navMap as row}
+					<section class="flex justify-stretch text-xs">
+						{#each Object.entries(row) as [key, value]}
 							<kbd
 								class={pressedKeys.includes(key)
-									? pressedStyle
+									? keyDownStyle + getWidth(key)
 									: unpressedKeys.includes(key)
-									? unpressedStyle
-									: defaultStyle}>{key} and {value}</kbd
+									? keyUpStyle + getWidth(key)
+									: defaultStyle + getWidth(key)}>{value}</kbd
 							>
-						{/if}
-					{/each}
-				</section>
-			{/each}
-		</section>
-
-		<section class="ml-8 mr-8">
-			{#each keyMap as row}
-				<section class="flex justify-stretch">
-					{#each Object.entries(row) as [key, value]}
-						{#if value === 'Space'}
-							<kbd class={keyCapStyle + 'basis-5/6'} id={key}>{value}</kbd>
-						{:else if value === 'Tab' || value === 'Caps' || value === 'Enter'}
-							<kbd class={keyCapStyle + 'basis-3/6'} id={key}>{value}</kbd>
-						{:else}
-							<kbd class={keyCapStyle + 'basis-1/6'} id={key}>{value}</kbd>
-						{/if}
-					{/each}
-				</section>
-			{/each}
-		</section>
-
-		<div class="flex flex-col justify-between">
-			<section class="ml-8 mr-8">
-				{#each navMap as row}
-					<section class="flex justify-stretch">
-						{#each Object.entries(row) as [key, value]}
-							{#if value == 'XX'}
-								<kbd class={'opacity-0 w-[4rem] h-12 pointer-events-none'} id={key}>{value}</kbd>
-							{:else}
-								<kbd class={keyCapStyle + 'w-14 h-12 text-xs'} id={key}>{value}</kbd>
-							{/if}
 						{/each}
 					</section>
 				{/each}
 			</section>
 
+			<!-- arrowBlock -->
 			<section class="ml-8 mr-8">
 				{#each navArrow as row}
 					<section class="flex justify-stretch">
 						{#each Object.entries(row) as [key, value]}
-							{#if value == 'XX'}
-								<kbd class={'opacity-0 w-[4rem] h-12 pointer-events-none'} id={key}>{value}</kbd>
-							{:else}
-								<kbd class={keyCapStyle + 'w-14 h-12 text-xs'} id={key}>{value}</kbd>
-							{/if}
+							<kbd
+								class={pressedKeys.includes(key)
+									? keyDownStyle
+									: unpressedKeys.includes(key)
+									? keyUpStyle
+									: defaultStyle}>{value}</kbd
+							>
 						{/each}
 					</section>
 				{/each}
 			</section>
 		</div>
-		<section class="ml-8 mr-8 flex">
-			<div>
-				{#each numMap as row}
-					<section class="flex justify-stretch">
-						{#each Object.entries(row) as [key, value]}
-							{#if value === '0'}
-								<kbd class={keyCapStyle + 'w-[6.5rem] h-12 text-xs'} id={key}>{value}</kbd>
-							{:else}
-								<kbd class={keyCapStyle + 'w-12 h-12 text-xs'} id={key}>{value}</kbd>
-							{/if}
-						{/each}
-					</section>
-				{/each}
-			</div>
+		<!-- numBlock -->
+		<section class="ml-8 mr-8">
+			{#each numMap as row}
+				<section class="flex justify-stretch">
+					{#each Object.entries(row) as [key, value]}
+						<kbd
+							class={pressedKeys.includes(key)
+								? keyDownStyle
+								: unpressedKeys.includes(key)
+								? keyUpStyle
+								: defaultStyle}>{value}</kbd
+						>
+					{/each}
+				</section>
+			{/each}
+		</section>
 
-			<div>
-				{#each numExtra as row}
-					<section class="flex flex-col">
-						{#each Object.entries(row) as [key, value]}
-							{#if value === '-'}
-								<kbd class={keyCapStyle + 'w-12 h-12 grow-0 text-xs'} id={key}>{value}</kbd>
-							{:else}
-								<kbd class={keyCapStyle + 'w-12 h-[6.5rem] text-xs'} id={key}>{value}</kbd>
-							{/if}
-						{/each}
-					</section>
-				{/each}
-			</div>
+		<!-- numExtra -->
+		<section class="ml-8 mr-8">
+			{#each numExtra as row}
+				<section class="">
+					{#each Object.entries(row) as [key, value]}
+						<kbd
+							class={pressedKeys.includes(key)
+								? keyDownStyle
+								: unpressedKeys.includes(key)
+								? keyUpStyle
+								: defaultStyle}>{value}</kbd
+						>
+					{/each}
+				</section>
+			{/each}
 		</section>
 	</div>
 
