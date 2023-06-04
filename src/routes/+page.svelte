@@ -22,7 +22,7 @@
 			pressedKeys = [];
 			if (!unpressedKeys.includes(e.code)) unpressedKeys = [...unpressedKeys, e.code];
 			console.log('unpressedkeys', unpressedKeys);
-		}, 50);
+		}, 200);
 	}
 
 	function getWidth(key) {
