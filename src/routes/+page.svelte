@@ -1,8 +1,11 @@
 <script>
-	let baseStyle = 'p-2 m-1 border-2 rounded-xl transition duration-300 border-zinc-200 h-12 grow ';
-	let defaultStyle = baseStyle + 'bg-zinc-100 dark:bg-zinc-800 ';
-	let keyDownStyle = baseStyle + 'bg-red-300 dark:bg-red-600 -translate-y-4 ';
-	let keyUpStyle = baseStyle + 'bg-teal-300 dark:bg-teal-600 ';
+	import { fade } from 'svelte/transition';
+
+	let baseStyle =
+		'p-2 m-1 border-2 rounded-xl transition duration-300 border-zinc-200 dark:border-zinc-800 h-12 grow ';
+	let defaultStyle = baseStyle + 'bg-zinc-100 dark:bg-zinc-900 ';
+	let keyDownStyle = baseStyle + 'bg-amber-200 dark:bg-amber-800 -translate-y-4 ';
+	let keyUpStyle = baseStyle + 'bg-teal-200 dark:bg-teal-800 ';
 
 	let pressedKeys = new Array();
 	let unpressedKeys = new Array();
@@ -313,22 +316,15 @@
 	</div>
 
 	<div class="m-4 flex justify-between">
-		<p class=" text-xl p-2 m-2">
-			Last Pressed Key : <kbd>{lastPressed}</kbd>
+		<p class="text-xl p-2 m-2 transition duration-300 ease-in">
+			Last Pressed Key : {lastPressed}
 		</p>
 
 		<button
 			on:click={function () {
-				// Iterate over the map keys
-				for (const key in pressedKeys) {
-					// Check if the value is true
-					if (!pressedKeys[key]) {
-						document.getElementById(key).classList.remove('bg-teal-200');
-						document.getElementById(key).classList.remove('dark:bg-teal-800');
-					}
-				}
+				unpressedKeys = [];
 			}}
-			class="px-4 m-1 rounded-xl transition duration-300 delay-50 h-12 bg-zinc-200 dark:bg-zinc-800 hover:-translate-y-1 active:translate-y-1 active:bg-sky-500"
+			class="p-2 m-1 basis-1/6 rounded-xl transition duration-300 bg-zinc-200 dark:bg-zinc-800 hover:bg-stone-300 hover:dark:bg-stone-600 active:bg-slate-300 active:dark:bg-slate-600 active:translate-y-1"
 			>Reset</button
 		>
 	</div>
