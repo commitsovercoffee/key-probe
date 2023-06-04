@@ -1,19 +1,20 @@
 <script>
-	let baseStyle = 'p-2 m-1 border-2 rounded-xl transition duration-300 border-zinc-200 ';
+	let baseStyle = 'p-2 m-1 border-2 rounded-xl transition duration-300 border-zinc-200 h-12 grow ';
 	let defaultStyle = baseStyle + 'bg-zinc-100 dark:bg-zinc-800 ';
 	let keyDownStyle = baseStyle + 'bg-red-300 dark:bg-red-600 -translate-y-4 ';
 	let keyUpStyle = baseStyle + 'bg-teal-300 dark:bg-teal-600 ';
 
 	let pressedKeys = new Array();
 	let unpressedKeys = new Array();
-	let lastKey = [];
+	let lastPressed = [];
 
 	function onKeyDown(e) {
 		if (!pressedKeys.includes(e.code)) pressedKeys = [...pressedKeys, e.code];
-		console.log('pressedkeys', pressedKeys);
 	}
 
 	function onKeyUp(e) {
+		if (lastPressed.length > 5) lastPressed.shift();
+		lastPressed = [...lastPressed, e.code];
 		setTimeout(function () {
 			pressedKeys = [];
 			if (!unpressedKeys.includes(e.code)) unpressedKeys = [...unpressedKeys, e.code];
@@ -139,9 +140,9 @@
 
 	const navArrow = [
 		{
-			Fills: 'XX',
+			leftFill: '',
 			ArrowUp: 'Up',
-			Fill: 'XX'
+			rightFill: ''
 		},
 		{
 			ArrowLeft: 'Left',
@@ -210,18 +211,18 @@
 			{/each}
 		</section>
 
-		<div>
+		<div class="justify-between flex flex-col">
 			<!-- system, nav and arrow keys -->
 			<section class="px-8">
 				{#each navMap as row}
-					<section class="flex justify-stretch text-xs">
+					<section class="flex text-xs">
 						{#each Object.entries(row) as [key, value]}
 							<kbd
 								class={pressedKeys.includes(key)
-									? keyDownStyle + getWidth(key)
+									? keyDownStyle + 'w-12'
 									: unpressedKeys.includes(key)
-									? keyUpStyle + getWidth(key)
-									: defaultStyle + getWidth(key)}>{value}</kbd
+									? keyUpStyle + 'w-12'
+									: defaultStyle + 'w-12'}>{value}</kbd
 							>
 						{/each}
 					</section>
@@ -229,60 +230,91 @@
 			</section>
 
 			<!-- arrowBlock -->
-			<section class="ml-8 mr-8">
+			<section class="px-8">
 				{#each navArrow as row}
-					<section class="flex justify-stretch">
+					<section class="flex text-xs">
 						{#each Object.entries(row) as [key, value]}
-							<kbd
-								class={pressedKeys.includes(key)
-									? keyDownStyle
-									: unpressedKeys.includes(key)
-									? keyUpStyle
-									: defaultStyle}>{value}</kbd
-							>
+							{#if key === 'leftFill' || key === 'rightFill'}
+								<kbd
+									class={pressedKeys.includes(key)
+										? keyDownStyle + 'w-12'
+										: unpressedKeys.includes(key)
+										? keyUpStyle + 'w-12'
+										: defaultStyle + 'w-12 opacity-0'}>{value}</kbd
+								>
+							{:else}
+								<kbd
+									class={pressedKeys.includes(key)
+										? keyDownStyle + 'w-12'
+										: unpressedKeys.includes(key)
+										? keyUpStyle + 'w-12'
+										: defaultStyle + 'w-12'}>{value}</kbd
+								>
+							{/if}
 						{/each}
 					</section>
 				{/each}
 			</section>
 		</div>
-		<!-- numBlock -->
-		<section class="ml-8 mr-8">
-			{#each numMap as row}
-				<section class="flex justify-stretch">
-					{#each Object.entries(row) as [key, value]}
-						<kbd
-							class={pressedKeys.includes(key)
-								? keyDownStyle
-								: unpressedKeys.includes(key)
-								? keyUpStyle
-								: defaultStyle}>{value}</kbd
-						>
-					{/each}
-				</section>
-			{/each}
-		</section>
 
-		<!-- numExtra -->
-		<section class="ml-8 mr-8">
+		<!-- numPad -->
+		<div class="flex h-min">
+			<section>
+				{#each numMap as row}
+					<section class="flex text-xs">
+						{#each Object.entries(row) as [key, value]}
+							{#if key === 'Numpad0'}
+								<kbd
+									class={pressedKeys.includes(key)
+										? keyDownStyle
+										: unpressedKeys.includes(key)
+										? keyUpStyle
+										: defaultStyle}>{value}</kbd
+								>
+							{:else}
+								<kbd
+									class={pressedKeys.includes(key)
+										? keyDownStyle + 'w-12 grow-0'
+										: unpressedKeys.includes(key)
+										? keyUpStyle + 'w-12 grow-0'
+										: defaultStyle + 'w-12 grow-0'}>{value}</kbd
+								>
+							{/if}
+						{/each}
+					</section>
+				{/each}
+			</section>
+			<!-- Numpad extra -->
+
 			{#each numExtra as row}
-				<section class="">
+				<section class="flex flex-col text-xs">
 					{#each Object.entries(row) as [key, value]}
-						<kbd
-							class={pressedKeys.includes(key)
-								? keyDownStyle
-								: unpressedKeys.includes(key)
-								? keyUpStyle
-								: defaultStyle}>{value}</kbd
-						>
+						{#if key === 'NumpadSubtract'}
+							<kbd
+								class={pressedKeys.includes(key)
+									? keyDownStyle + 'w-12 grow-0'
+									: unpressedKeys.includes(key)
+									? keyUpStyle + 'w-12 grow-0'
+									: defaultStyle + 'w-12 grow-0'}>{value}</kbd
+							>
+						{:else}
+							<kbd
+								class={pressedKeys.includes(key)
+									? keyDownStyle + 'w-12'
+									: unpressedKeys.includes(key)
+									? keyUpStyle + 'w-12'
+									: defaultStyle + 'w-12 basis-2/12 '}>{value}</kbd
+							>
+						{/if}
 					{/each}
 				</section>
 			{/each}
-		</section>
+		</div>
 	</div>
 
 	<div class="m-4 flex justify-between">
 		<p class=" text-xl p-2 m-2">
-			Last Pressed Key : <kbd>{lastKey}</kbd>
+			Last Pressed Key : <kbd>{lastPressed}</kbd>
 		</p>
 
 		<button
