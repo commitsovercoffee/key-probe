@@ -1,5 +1,24 @@
 <script>
-	let keyStatus = new Map();
+	let defaultStyle = 'p-2 m-2 bg-zinc-200';
+	let pressedStyle = 'p-2 m-2 bg-red-500';
+	let unpressedStyle = 'p-2 m-2 bg-sky-500';
+
+	function onKeyDown(e) {
+		if (!pressedKeys.includes(e.code)) pressedKeys = [...pressedKeys, e.code];
+		console.log('pressedkeys', pressedKeys);
+	}
+
+	function onKeyUp(e) {
+		setTimeout(function () {
+			pressedKeys = [];
+			if (!unpressedKeys.includes(e.code)) unpressedKeys = [...unpressedKeys, e.code];
+			console.log('unpressedkeys', unpressedKeys);
+		}, 50);
+	}
+
+	let pressedKeys = new Array();
+	let unpressedKeys = new Array();
+	let lastKey = [];
 
 	const keyMap = [
 		{
@@ -86,7 +105,7 @@
 			AltRight: 'Alt',
 			OSRight: 'OS',
 			ControlRight: 'Ctrl',
-			Menu: 'Menu'
+			ContextMenu: 'Menu'
 		}
 	];
 
@@ -104,7 +123,7 @@
 		{
 			Delete: 'Del',
 			End: 'End',
-			pageDown: 'Page Down'
+			PageDown: 'Page Down'
 		}
 	];
 
@@ -157,55 +176,37 @@
 		}
 	];
 
-	let keyCapStyle =
-		'p-2 m-1 border-2 border-zinc-200 dark:border-zinc-800 rounded-xl transition duration-300 delay-50 ';
+	let keyCapStyle = 'p-2 m-1 border-2 border-zinc-200  rounded-xl transition duration-300 ';
 </script>
 
-<svelte:body
-	on:keydown={function (event) {
-		event.preventDefault();
-
-		keyStatus[event.code] = true;
-
-		for (const key in keyStatus) {
-			if (keyStatus.hasOwnProperty(key)) {
-				// Check if the value is true
-				if (keyStatus[key]) {
-					document.getElementById(key).classList.remove('bg-zinc-100');
-					document.getElementById(key).classList.remove('bg-teal-300');
-					document.getElementById(key).classList.add('bg-red-300');
-					document.getElementById(key).classList.add('-translate-y-2');
-				}
-			}
-		}
-
-		console.log(keyStatus);
-	}}
-	on:keyup={function (event) {
-		event.preventDefault();
-
-		keyStatus[event.code] = false;
-		setTimeout(function () {
-			for (const key in keyStatus) {
-				if (keyStatus.hasOwnProperty(key)) {
-					// Check if the value is true
-					if (!keyStatus[key]) {
-						document.getElementById(key).classList.remove('bg-red-300');
-						document.getElementById(key).classList.add('bg-teal-300');
-						document.getElementById(key).classList.remove('-translate-y-2');
-					}
-				}
-			}
-		}, 50);
-
-		console.log(keyStatus);
-	}}
-/>
+<svelte:window on:keydown|preventDefault={onKeyDown} on:keyup={onKeyUp} />
 
 <div class="mx-auto w-fit prose prose-zinc dark:prose-invert max-w-none">
 	<div
-		class="mt-16 p-4 flex border border-zinc-200 dark:border-zinc-800 rounded-xl flex-grow bg-zinc-50 dark:bg-zinc-800 overflow-hidden"
+		class="mt-16 p-4 flex border border-zinc-200 dark:border-zinc-800 rounded-xl bg-zinc-50 dark:bg-zinc-800"
 	>
+		<section class="ml-8 mr-8">
+			{#each navMap as row}
+				<section class="flex justify-stretch">
+					{#each Object.entries(row) as [key, value]}
+						{#if value === 'Space'}
+							<kbd class={keyCapStyle + 'basis-5/6'} id={key}>{value}</kbd>
+						{:else if value === 'Tab' || value === 'Caps' || value === 'Enter'}
+							<kbd class={keyCapStyle + 'basis-3/6'} id={key}>{value}</kbd>
+						{:else}
+							<kbd
+								class={pressedKeys.includes(key)
+									? pressedStyle
+									: unpressedKeys.includes(key)
+									? unpressedStyle
+									: defaultStyle}>{key} and {value}</kbd
+							>
+						{/if}
+					{/each}
+				</section>
+			{/each}
+		</section>
+
 		<section class="ml-8 mr-8">
 			{#each keyMap as row}
 				<section class="flex justify-stretch">
@@ -280,5 +281,26 @@
 				{/each}
 			</div>
 		</section>
+	</div>
+
+	<div class="m-4 flex justify-between">
+		<p class=" text-xl p-2 m-2">
+			Last Pressed Key : <kbd>{lastKey}</kbd>
+		</p>
+
+		<button
+			on:click={function () {
+				// Iterate over the map keys
+				for (const key in pressedKeys) {
+					// Check if the value is true
+					if (!pressedKeys[key]) {
+						document.getElementById(key).classList.remove('bg-teal-200');
+						document.getElementById(key).classList.remove('dark:bg-teal-800');
+					}
+				}
+			}}
+			class="px-4 m-1 rounded-xl transition duration-300 delay-50 h-12 bg-zinc-200 dark:bg-zinc-800 hover:-translate-y-1 active:translate-y-1 active:bg-sky-500"
+			>Reset</button
+		>
 	</div>
 </div>
