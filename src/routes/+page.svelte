@@ -85,19 +85,87 @@
 		// Row 5
 		[
 			{ key: 'Ctrl', keycode: 'ControlLeft' },
-			{ key: 'MetaLeft', keycode: 'MetaLeft' },
+			{ key: 'OS', keycode: 'MetaLeft' },
 			{ key: 'Alt', keycode: 'AltLeft' },
 			{ key: 'Space', keycode: 'Space' },
 			{ key: 'Alt', keycode: 'AltRight' },
-			{ key: 'Ctrl', keycode: 'ControlRight' }
+			{ key: 'OS', keycode: 'MetaRight' },
+			{ key: 'Ctrl', keycode: 'ControlRight' },
+			{ key: 'Menu', keycode: 'ContextMenu' }
 		]
 	];
 
+	let navKeys = [
+		[
+			{ key: 'Print Sc', keycode: 'PrintScreen' },
+			{ key: 'Scrl Lck', keycode: 'ScrollLock' },
+			{ key: 'Pause', keycode: 'Pause' }
+		],
+
+		[
+			{ key: 'Ins', keycode: 'Insert' },
+			{ key: 'Home', keycode: 'Home' },
+			{ key: 'Page Up', keycode: 'PageUp' }
+		],
+
+		[
+			{ key: 'Del', keycode: 'Delete' },
+			{ key: 'End', keycode: 'End' },
+			{ key: 'Page Down', keycode: 'PageDown' }
+		]
+	];
+
+	let arrowKeys = [
+		[
+			{ key: '', keycode: 'Fill' },
+			{ key: 'Up', keycode: 'ArrowUp' },
+			{ key: '', keycode: 'Fill' }
+		],
+
+		[
+			{ key: 'Left', keycode: 'ArrowLeft' },
+			{ key: 'Down', keycode: 'ArrowDown' },
+			{ key: 'Right', keycode: 'ArrowRight' }
+		]
+	];
+
+	let numKeys = [
+		[
+			{ key: 'Num', keycode: 'NumLock' },
+			{ key: '/', keycode: 'NumpadDivide' },
+			{ key: '*', keycode: 'NumpadMultiply' }
+		],
+		[
+			{ key: '7', keycode: 'Numpad7' },
+			{ key: '8', keycode: 'Numpad8' },
+			{ key: '9', keycode: 'Numpad9' }
+		],
+		[
+			{ key: '4', keycode: 'Numpad4' },
+			{ key: '5', keycode: 'Numpad6' },
+			{ key: '6', keycode: 'Numpad9' }
+		],
+		[
+			{ key: '1', keycode: 'Numpad1' },
+			{ key: '2', keycode: 'Numpad2' },
+			{ key: '3', keycode: 'Numpad3' }
+		],
+		[
+			{ key: '0', keycode: 'Numpad0' },
+			{ key: '.', keycode: 'NumpadDecimal' }
+		]
+	];
+
+	let numExtra = [
+		{ key: '-', keycode: 'NumpadSubtract' },
+		{ key: '+', keycode: 'NumpadAdd' },
+		{ key: 'Enter', keycode: 'NumpadEnter' }
+	];
 	let keysPressed = [];
 	let prevPressed = [];
 
 	let keyCapStyle =
-		'key h-8 bg-gray-300 grow text-gray-700 rounded-md p-2 mx-1 transition-all duration-200 transform ';
+		'key h-12 bg-gray-300 text-gray-700 rounded-md p-2 m-1 transition-all duration-200 transform ';
 
 	const handleKeyDown = (event) => {
 		if (!keysPressed.some((item) => item.code === event.code)) {
@@ -112,27 +180,122 @@
 
 		keysPressed = keysPressed.filter((item) => item.code !== event.code);
 	};
+
+	function getStyle(key) {
+		switch (key) {
+			case 'NumpadSubtract':
+				return keyCapStyle + ' grow-0';
+			case 'NumpadEnter':
+				return keyCapStyle + ' grow';
+			case 'NumpadAdd':
+				return keyCapStyle + ' grow';
+			case 'Fill':
+				return keyCapStyle + ' opacity-0';
+			case 'Space':
+				return keyCapStyle + ' basis-8/12';
+			default:
+				return keyCapStyle + '  basis-1/12';
+		}
+	}
 </script>
 
 <svelte:window on:keydown|preventDefault={handleKeyDown} on:keyup|preventDefault={handleKeyUp} />
 
-<main class="min-h-screen flex items-center justify-center bg-gray-200">
-	<div class="flex flex-col justify-center flex-wrap">
-		{#each keyboard as row}
-			<div class="key-group flex space-x-2 p-2">
-				{#each row as key}
-					<div
-						class={keysPressed.some((item) => item.code === key.keycode)
-							? keyCapStyle + ' bg-red-500 text-white transform -translate-y-10'
-							: prevPressed.some((item) => item.code === key.keycode)
-							? keyCapStyle + ' bg-teal-500'
-							: keyCapStyle}
-					>
-						{key.key}
+<main class="">
+	<div class="bg-gray-800 w-fit mx-auto mt-16">
+		<div class="flex">
+			<div class="flex flex-col justify-center flex-wrap">
+				{#each keyboard as row}
+					<div class="key-group flex space-x-2 p-2">
+						{#each row as key}
+							<div
+								class={keysPressed.some((item) => item.code === key.keycode)
+									? getStyle(key.keycode) + ' bg-red-500 text-white transform -translate-y-10'
+									: prevPressed.some((item) => item.code === key.keycode)
+									? getStyle(key.keycode) + ' bg-teal-500'
+									: getStyle(key.keycode)}
+							>
+								{key.key}
+							</div>
+						{/each}
 					</div>
 				{/each}
 			</div>
-		{/each}
+
+			<div class="flex flex-col w-min justify-between">
+				<div>
+					{#each navKeys as row}
+						<div class="flex p-2 text-xs">
+							{#each row as key}
+								<div
+									class={keysPressed.some((item) => item.code === key.keycode)
+										? getStyle(key.keycode) +
+										  ' bg-red-500 text-white transform -translate-y-10 grow'
+										: prevPressed.some((item) => item.code === key.keycode)
+										? getStyle(key.keycode) + ' bg-teal-500 grow'
+										: getStyle(key.keycode) + ' grow'}
+								>
+									{key.key}
+								</div>
+							{/each}
+						</div>
+					{/each}
+				</div>
+				<div>
+					{#each arrowKeys as row}
+						<div class="flex p-2 text-xs">
+							{#each row as key}
+								<div
+									class={keysPressed.some((item) => item.code === key.keycode)
+										? getStyle(key.keycode) +
+										  ' bg-red-500 text-white transform -translate-y-10 grow'
+										: prevPressed.some((item) => item.code === key.keycode)
+										? getStyle(key.keycode) + ' bg-teal-500 grow'
+										: getStyle(key.keycode) + ' grow'}
+								>
+									{key.key}
+								</div>
+							{/each}
+						</div>
+					{/each}
+				</div>
+			</div>
+
+			<div class="mt-20 flex w-min justify-between h-min">
+				<div>
+					{#each numKeys as row}
+						<div class="flex p-2 text-xs">
+							{#each row as key}
+								<div
+									class={keysPressed.some((item) => item.code === key.keycode)
+										? getStyle(key.keycode) +
+										  ' bg-red-500 text-white transform -translate-y-10 grow w-10'
+										: prevPressed.some((item) => item.code === key.keycode)
+										? getStyle(key.keycode) + ' bg-teal-500 grow w-10'
+										: getStyle(key.keycode) + ' grow w-10'}
+								>
+									{key.key}
+								</div>
+							{/each}
+						</div>
+					{/each}
+				</div>
+
+				<div class="flex flex-col p-2 text-xs">
+					{#each numExtra as key}
+						<div
+							class={keysPressed.some((item) => item.code === key.keycode)
+								? getStyle(key.keycode) + ' bg-red-500 text-white transform -translate-y-10 w-10'
+								: prevPressed.some((item) => item.code === key.keycode)
+								? getStyle(key.keycode) + ' bg-teal-500 w-10'
+								: getStyle(key.keycode) + ' w-10 '}
+						>
+							{key.key}
+						</div>
+					{/each}
+				</div>
+			</div>
+		</div>
 	</div>
 </main>
 
