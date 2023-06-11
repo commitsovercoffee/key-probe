@@ -1,4 +1,6 @@
 <script>
+	import { slide } from 'svelte/transition';
+
 	const keyboard = [
 		// Row 0
 		[
@@ -163,6 +165,7 @@
 	];
 	let keysPressed = [];
 	let prevPressed = [];
+	let log = [];
 
 	let keyCapStyle =
 		'p-2 m-1 rounded-xl border-2 border-zinc-200 dark:border-zinc-800 h-12 transition-all duration-200 transform grow ';
@@ -172,6 +175,8 @@
 	let keyDefaultStyle = ' bg-zinc-100 dark:bg-zinc-900 ';
 
 	const handleKeyDown = (event) => {
+		log = [...log, { key: event.key, code: event.code }];
+
 		if (!keysPressed.some((item) => item.code === event.code)) {
 			keysPressed = [...keysPressed, { key: event.key, code: event.code }];
 		}
@@ -301,5 +306,27 @@
 				</div>
 			</div>
 		</div>
+	</div>
+
+	<div class="my-4 flex justify-between">
+		<section class="p-1 m-2 flex">
+			<kbd class="p-2 m-2 border-none">Log :</kbd>
+			<div class="flex flex-col-reverse">
+				{#each log as val}
+					<kbd in:slide|local out:slide|local class={keyCapStyle + keyDefaultStyle + ' grow-0'}
+						>{val.code}</kbd
+					>
+				{/each}
+			</div>
+		</section>
+
+		<button
+			on:click={function () {
+				prevPressed = [];
+				log = [];
+			}}
+			class="p-2 m-1 basis-1/6 rounded-xl h-min transition duration-300 bg-zinc-200 dark:bg-zinc-800 hover:bg-stone-300 hover:dark:bg-stone-600 active:bg-slate-300 active:dark:bg-slate-600 active:translate-y-1"
+			>Reset</button
+		>
 	</div>
 </main>
