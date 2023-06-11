@@ -94,8 +94,10 @@
 	];
 
 	let keysPressed = [];
+	let prevPressed = [];
+
 	let keyCapStyle =
-		'key h-8 bg-gray-300 grow text-gray-700 font-bold rounded-md p-2 mx-1 transition-all duration-200 transform ';
+		'key h-8 bg-gray-300 grow text-gray-700 rounded-md p-2 mx-1 transition-all duration-200 transform ';
 
 	const handleKeyDown = (event) => {
 		if (!keysPressed.some((item) => item.code === event.code)) {
@@ -104,6 +106,10 @@
 	};
 
 	const handleKeyUp = (event) => {
+		if (!prevPressed.some((item) => item.code === event.code)) {
+			prevPressed = [...prevPressed, { key: event.key, code: event.code }];
+		}
+
 		keysPressed = keysPressed.filter((item) => item.code !== event.code);
 	};
 </script>
@@ -117,7 +123,9 @@
 				{#each row as key}
 					<div
 						class={keysPressed.some((item) => item.code === key.keycode)
-							? keyCapStyle + ' bg-red-500 text-white transform -translate-y-8'
+							? keyCapStyle + ' bg-red-500 text-white transform -translate-y-10'
+							: prevPressed.some((item) => item.code === key.keycode)
+							? keyCapStyle + ' bg-teal-500'
 							: keyCapStyle}
 					>
 						{key.key}
