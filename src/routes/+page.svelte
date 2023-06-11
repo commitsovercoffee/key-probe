@@ -159,13 +159,17 @@
 	let numExtra = [
 		{ key: '-', keycode: 'NumpadSubtract' },
 		{ key: '+', keycode: 'NumpadAdd' },
-		{ key: 'Enter', keycode: 'NumpadEnter' }
+		{ key: 'Ent', keycode: 'NumpadEnter' }
 	];
 	let keysPressed = [];
 	let prevPressed = [];
 
 	let keyCapStyle =
-		'key h-12 bg-gray-300 text-gray-700 rounded-md p-2 m-1 transition-all duration-200 transform ';
+		'p-2 m-1 rounded-xl border-2 border-zinc-200 dark:border-zinc-800 h-12 transition-all duration-200 transform grow ';
+	let keyDownStyle =
+		' bg-amber-200 dark:bg-amber-800 text-zinc-800 dark:text-zinc-200 transform -translate-y-10';
+	let keyUpStyle = ' bg-teal-200 dark:bg-teal-800';
+	let keyDefaultStyle = ' bg-zinc-100 dark:bg-zinc-900 ';
 
 	const handleKeyDown = (event) => {
 		if (!keysPressed.some((item) => item.code === event.code)) {
@@ -184,36 +188,39 @@
 	function getStyle(key) {
 		switch (key) {
 			case 'NumpadSubtract':
-				return keyCapStyle + ' grow-0';
+				return keyCapStyle + ' grow-0 ';
 			case 'NumpadEnter':
-				return keyCapStyle + ' grow';
+				return keyCapStyle + ' grow ';
 			case 'NumpadAdd':
-				return keyCapStyle + ' grow';
+				return keyCapStyle + ' grow ';
 			case 'Fill':
-				return keyCapStyle + ' opacity-0';
+				return keyCapStyle + ' opacity-0 ';
 			case 'Space':
-				return keyCapStyle + ' basis-8/12';
+				return keyCapStyle + ' basis-8/12 ';
 			default:
-				return keyCapStyle + '  basis-1/12';
+				return keyCapStyle + '  basis-1/12 ';
 		}
 	}
 </script>
 
 <svelte:window on:keydown|preventDefault={handleKeyDown} on:keyup|preventDefault={handleKeyUp} />
 
-<main class="">
-	<div class="bg-gray-800 w-fit mx-auto mt-16">
-		<div class="flex">
-			<div class="flex flex-col justify-center flex-wrap">
+<main class="mx-auto w-fit prose prose-zinc dark:prose-invert max-w-none">
+	<div
+		class="mt-16 py-4 px-2 border border-zinc-200 dark:border-zinc-800 rounded-xl bg-zinc-50 dark:bg-zinc-800"
+	>
+		<div class="flex h-min">
+			<!-- 60% keys -->
+			<div class="flex flex-col w-min h-min">
 				{#each keyboard as row}
-					<div class="key-group flex space-x-2 p-2">
+					<div class="flex p-1">
 						{#each row as key}
 							<div
 								class={keysPressed.some((item) => item.code === key.keycode)
-									? getStyle(key.keycode) + ' bg-red-500 text-white transform -translate-y-10'
+									? getStyle(key.keycode) + keyDownStyle
 									: prevPressed.some((item) => item.code === key.keycode)
-									? getStyle(key.keycode) + ' bg-teal-500'
-									: getStyle(key.keycode)}
+									? getStyle(key.keycode) + keyUpStyle
+									: getStyle(key.keycode) + keyDefaultStyle}
 							>
 								{key.key}
 							</div>
@@ -222,18 +229,18 @@
 				{/each}
 			</div>
 
-			<div class="flex flex-col w-min justify-between">
+			<!-- navKeys -->
+			<div class="flex flex-col w-min justify-between text-xs">
 				<div>
 					{#each navKeys as row}
-						<div class="flex p-2 text-xs">
+						<div class="flex p-1">
 							{#each row as key}
 								<div
 									class={keysPressed.some((item) => item.code === key.keycode)
-										? getStyle(key.keycode) +
-										  ' bg-red-500 text-white transform -translate-y-10 grow'
+										? getStyle(key.keycode) + keyDownStyle
 										: prevPressed.some((item) => item.code === key.keycode)
-										? getStyle(key.keycode) + ' bg-teal-500 grow'
-										: getStyle(key.keycode) + ' grow'}
+										? getStyle(key.keycode) + keyUpStyle
+										: getStyle(key.keycode) + keyDefaultStyle}
 								>
 									{key.key}
 								</div>
@@ -243,15 +250,14 @@
 				</div>
 				<div>
 					{#each arrowKeys as row}
-						<div class="flex p-2 text-xs">
+						<div class="flex p-1">
 							{#each row as key}
 								<div
 									class={keysPressed.some((item) => item.code === key.keycode)
-										? getStyle(key.keycode) +
-										  ' bg-red-500 text-white transform -translate-y-10 grow'
+										? getStyle(key.keycode) + keyDownStyle
 										: prevPressed.some((item) => item.code === key.keycode)
-										? getStyle(key.keycode) + ' bg-teal-500 grow'
-										: getStyle(key.keycode) + ' grow'}
+										? getStyle(key.keycode) + keyUpStyle
+										: getStyle(key.keycode) + keyDefaultStyle}
 								>
 									{key.key}
 								</div>
@@ -261,18 +267,17 @@
 				</div>
 			</div>
 
-			<div class="mt-20 flex w-min justify-between h-min">
-				<div>
+			<div class="flex self-end">
+				<div class="flex flex-col">
 					{#each numKeys as row}
-						<div class="flex p-2 text-xs">
+						<div class="flex p-1 text-xs">
 							{#each row as key}
 								<div
 									class={keysPressed.some((item) => item.code === key.keycode)
-										? getStyle(key.keycode) +
-										  ' bg-red-500 text-white transform -translate-y-10 grow w-10'
+										? getStyle(key.keycode) + keyDownStyle + 'w-10'
 										: prevPressed.some((item) => item.code === key.keycode)
-										? getStyle(key.keycode) + ' bg-teal-500 grow w-10'
-										: getStyle(key.keycode) + ' grow w-10'}
+										? getStyle(key.keycode) + keyUpStyle + 'w-10'
+										: getStyle(key.keycode) + keyDefaultStyle + 'w-10'}
 								>
 									{key.key}
 								</div>
@@ -281,14 +286,14 @@
 					{/each}
 				</div>
 
-				<div class="flex flex-col p-2 text-xs">
+				<div class="flex flex-col p-1 text-xs">
 					{#each numExtra as key}
 						<div
 							class={keysPressed.some((item) => item.code === key.keycode)
-								? getStyle(key.keycode) + ' bg-red-500 text-white transform -translate-y-10 w-10'
+								? getStyle(key.keycode) + keyDownStyle + 'w-10'
 								: prevPressed.some((item) => item.code === key.keycode)
-								? getStyle(key.keycode) + ' bg-teal-500 w-10'
-								: getStyle(key.keycode) + ' w-10 '}
+								? getStyle(key.keycode) + keyUpStyle + 'w-10'
+								: getStyle(key.keycode) + keyDefaultStyle + 'w-10'}
 						>
 							{key.key}
 						</div>
@@ -298,4 +303,3 @@
 		</div>
 	</div>
 </main>
-
