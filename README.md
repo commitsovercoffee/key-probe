@@ -20,7 +20,7 @@ To build and run the app on your local machine, follow the instructions below:
 
 ### Installation
 
-1.  Clone the repository or download the source code of the Keyboard Tester App.
+1.  Clone the repository or download the source code.
 2.  Open a terminal or command prompt and navigate to the project directory.
 3.  Run the command `npm install`.
 

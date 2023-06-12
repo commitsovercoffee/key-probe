@@ -225,6 +225,16 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Key Probe : A minimal keyboard tester app.</title>
+	<meta
+		name="description"
+		content="
+Keyboard tester app that allows users to test the functionality of their computer keyboards. Diagnose or debug inconsistencies with key presses, such as stuck keys, ghosting (incorrect key registrations), or unresponsive keys. 
+"
+	/>
+</svelte:head>
+
 <svelte:window
 	on:keydown|preventDefault={handleKeyDown}
 	on:keyup|preventDefault={handleKeyUp}
