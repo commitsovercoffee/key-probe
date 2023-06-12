@@ -1,5 +1,6 @@
 <script>
-	import { slide } from 'svelte/transition';
+	import { fly, fade } from 'svelte/transition';
+	import { afterUpdate, tick } from 'svelte';
 
 	const keyboard = [
 		// Row 0
@@ -87,11 +88,11 @@
 		// Row 5
 		[
 			{ key: 'Ctrl', keycode: 'ControlLeft' },
-			{ key: 'OS', keycode: 'MetaLeft' },
+			{ key: 'OS', keycode: 'OSLeft' },
 			{ key: 'Alt', keycode: 'AltLeft' },
 			{ key: 'Space', keycode: 'Space' },
 			{ key: 'Alt', keycode: 'AltRight' },
-			{ key: 'OS', keycode: 'MetaRight' },
+			{ key: 'OS', keycode: 'OSRight' },
 			{ key: 'Ctrl', keycode: 'ControlRight' },
 			{ key: 'Menu', keycode: 'ContextMenu' }
 		]
@@ -166,6 +167,22 @@
 	let keysPressed = [];
 	let prevPressed = [];
 	let log = [];
+	let element;
+
+	// Either afterUpdate()
+	afterUpdate(() => {
+		console.log('afterUpdate');
+		if (log) scrollToBottom(element);
+	});
+
+	$: if (log && element) {
+		console.log('tick');
+		scrollToBottom(element);
+	}
+
+	const scrollToBottom = async (node) => {
+		node.scroll({ top: node.scrollHeight, behavior: 'smooth' });
+	};
 
 	let keyCapStyle =
 		'p-2 m-1 rounded-xl border-2 border-zinc-200 dark:border-zinc-800 h-12 transition-all duration-200 transform grow ';
@@ -208,7 +225,11 @@
 	}
 </script>
 
-<svelte:window on:keydown|preventDefault={handleKeyDown} on:keyup|preventDefault={handleKeyUp} />
+<svelte:window
+	on:keydown|preventDefault={handleKeyDown}
+	on:keyup|preventDefault={handleKeyUp}
+	on:contextmenu|preventDefault
+/>
 
 <main class="mx-auto w-fit prose prose-zinc dark:prose-invert max-w-none">
 	<div
@@ -235,7 +256,7 @@
 			</div>
 
 			<!-- navKeys -->
-			<div class="flex flex-col w-min justify-between text-xs">
+			<div class="flex flex-col w-min justify-between text-xs mx-6">
 				<div>
 					{#each navKeys as row}
 						<div class="flex p-1">
@@ -308,25 +329,34 @@
 		</div>
 	</div>
 
-	<div class="my-4 flex justify-between">
-		<section class="p-1 m-2 flex">
-			<kbd class="p-2 m-2 border-none">Log :</kbd>
-			<div class="flex flex-col-reverse">
-				{#each log as val}
-					<kbd in:slide|local out:slide|local class={keyCapStyle + keyDefaultStyle + ' grow-0'}
-						>{val.code}</kbd
-					>
-				{/each}
-			</div>
-		</section>
+	<div class="my-4 flex justify-between h-60">
+		<div bind:this={element} class="overflow-hidden">
+			{#each log as val, i}
+				<p
+					in:fly={{ x: 200, duration: 300 }}
+					out:fade
+					class="py-2 px-8 m-1 rounded-xl bg-zinc-200 dark:bg-zinc-800 w-min"
+				>
+					{val.code}
+				</p>
+			{/each}
+		</div>
 
-		<button
-			on:click={function () {
-				prevPressed = [];
-				log = [];
-			}}
-			class="p-2 m-1 basis-1/6 rounded-xl h-min transition duration-300 bg-zinc-200 dark:bg-zinc-800 hover:bg-stone-300 hover:dark:bg-stone-600 active:bg-slate-300 active:dark:bg-slate-600 active:translate-y-1"
-			>Reset</button
-		>
+		<div class="flex flex-col justify-between items-end">
+			<button
+				on:click={function () {
+					prevPressed = [];
+					log = [];
+				}}
+				class="px-8 py-2 m-1 rounded-xl w-min transition duration-300 bg-zinc-200 dark:bg-zinc-800 hover:bg-stone-300 hover:dark:bg-stone-600 active:bg-slate-300 active:dark:bg-slate-600 active:translate-y-1"
+				>Reset</button
+			>
+			<p>
+				Made by
+				<a href="https://commitsovercoffee.com/about" class="font-black underline-offset-4"
+					>Sourav Singh</a
+				>.
+			</p>
+		</div>
 	</div>
 </main>
