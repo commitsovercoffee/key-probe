@@ -145,8 +145,8 @@
 		],
 		[
 			{ key: '4', keycode: 'Numpad4' },
-			{ key: '5', keycode: 'Numpad6' },
-			{ key: '6', keycode: 'Numpad9' }
+			{ key: '5', keycode: 'Numpad5' },
+			{ key: '6', keycode: 'Numpad6' }
 		],
 		[
 			{ key: '1', keycode: 'Numpad1' },
@@ -300,10 +300,10 @@
 							{#each row as key}
 								<div
 									class={keysPressed.some((item) => item.code === key.keycode)
-										? getStyle(key.keycode) + keyDownStyle + 'w-10'
+										? getStyle(key.keycode) + keyDownStyle + ' w-10 '
 										: prevPressed.some((item) => item.code === key.keycode)
-										? getStyle(key.keycode) + keyUpStyle + 'w-10'
-										: getStyle(key.keycode) + keyDefaultStyle + 'w-10'}
+										? getStyle(key.keycode) + keyUpStyle + ' w-10 '
+										: getStyle(key.keycode) + keyDefaultStyle + ' w-10 '}
 								>
 									{key.key}
 								</div>
@@ -316,10 +316,10 @@
 					{#each numExtra as key}
 						<div
 							class={keysPressed.some((item) => item.code === key.keycode)
-								? getStyle(key.keycode) + keyDownStyle + 'w-10'
+								? getStyle(key.keycode) + keyDownStyle + ' w-10'
 								: prevPressed.some((item) => item.code === key.keycode)
-								? getStyle(key.keycode) + keyUpStyle + 'w-10'
-								: getStyle(key.keycode) + keyDefaultStyle + 'w-10'}
+								? getStyle(key.keycode) + keyUpStyle + ' w-10'
+								: getStyle(key.keycode) + keyDefaultStyle + ' w-10'}
 						>
 							{key.key}
 						</div>
