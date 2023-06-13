@@ -1,6 +1,6 @@
 <script>
 	import { fly, fade } from 'svelte/transition';
-	import { afterUpdate, tick } from 'svelte';
+	import { afterUpdate } from 'svelte';
 
 	const keyboard = [
 		// Row 0
@@ -167,22 +167,12 @@
 	let keysPressed = [];
 	let prevPressed = [];
 	let log = [];
-	let element;
 
-	// Either afterUpdate()
+	let scrollable;
+
 	afterUpdate(() => {
-		console.log('afterUpdate');
-		if (log) scrollToBottom(element);
+		scrollable.scrollTo(0, scrollable.scrollHeight);
 	});
-
-	$: if (log && element) {
-		console.log('tick');
-		scrollToBottom(element);
-	}
-
-	const scrollToBottom = async (node) => {
-		node.scroll({ top: node.scrollHeight, behavior: 'smooth' });
-	};
 
 	let keyCapStyle =
 		'p-2 m-1 rounded-xl border-2 border-zinc-200 dark:border-zinc-800 h-12 transition-all duration-200 transform grow ';
@@ -339,9 +329,9 @@ Keyboard tester app that allows users to test the functionality of their compute
 		</div>
 	</div>
 
-	<div class="my-4 flex justify-between h-60">
-		<div bind:this={element} class="overflow-hidden">
-			{#each log as val, i}
+	<div class="my-4 flex justify-between">
+		<div bind:this={scrollable} class="flex flex-col h-60 overflow-hidden">
+			{#each log as val}
 				<p
 					in:fly={{ x: 200, duration: 300 }}
 					out:fade
